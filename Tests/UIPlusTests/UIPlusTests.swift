@@ -9,15 +9,16 @@ final class UIPlusTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(UIPlus().text, "Hello, World!")
+//        XCTAssertEqual(UIPlus().text, "Hello, World!")
         
         let button = UIButton()
         button.addAction(for: .allEditingEvents) { (button) in
             
         }
         
-//        button.addAction(for: .touchUpInside) { button in
-//            let a = button as! UIButton
+        
+        //        button.addAction(for: .touchUpInside) { button in
+        //            let a = button as! UIButton
 //            print(a)
 //        }
 //        button.sendActions(for: .touchUpInside)
