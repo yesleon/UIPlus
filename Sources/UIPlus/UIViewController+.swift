@@ -19,7 +19,7 @@ public extension UIViewController {
         title: String?,
         message: String?,
         preferredStyle: UIAlertController.Style,
-        actions: [AlertAction<Output, Error>]
+        actions: [AlertAction<Output>]
     ) -> Future<Output, Error> {
     
         return Future { [weak self] completion in
@@ -52,8 +52,8 @@ public extension UIViewController {
     }
 }
 
-public struct AlertAction<Output, Failure: Error> {
-    public init(title: String? = nil, style: UIAlertAction.Style, handler: @escaping () throws -> Output) {
+public struct AlertAction<Output> {
+    public init(title: String?, style: UIAlertAction.Style, handler: @escaping () throws -> Output) {
         self.title = title
         self.style = style
         self.handler = handler
