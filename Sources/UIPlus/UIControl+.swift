@@ -15,21 +15,18 @@ public protocol EventHandling {
 #if !os(macOS)
 import UIKit
 
-
+class ActionTarget<T>: NSObject {
+    init(action: @escaping (T) -> Void) {
+        self.action = action
+    }
+    let action: (T) -> Void
+    @objc func handleEvent(_ sender: Any) {
+        action(sender as! T)
+    }
+}
 extension UIControl: EventHandling {
     
     
-    
-    class ActionTarget<T>: NSObject {
-        init(action: @escaping (T) -> Void) {
-            self.action = action
-        }
-        let action: (T) -> Void
-        @objc func handleEvent(_ sender: Any) {
-            action(sender as! T)
-        }
-    }
-    static var targets = [Any]()
 }
 public extension EventHandling where Self: UIControl {
     
@@ -41,9 +38,12 @@ public extension EventHandling where Self: UIControl {
     }
     
     func addAction(for controlEvents: Event, handler: @escaping (Self) -> Void) {
-        let target = ActionTarget(action: handler)
+        var target: ActionTarget<Self>!
+        target = ActionTarget { control in
+            _ = target
+            handler(control)
+        }
         addTarget(target, action: #selector(target.handleEvent(_:)), for: controlEvents)
-        Self.targets.append(target)
     }
     
     func removeAction(for controlEvents: Event) {
