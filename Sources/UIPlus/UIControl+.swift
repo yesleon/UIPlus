@@ -71,6 +71,7 @@ public extension EventHandling where Self: UIBarButtonItem {
     func addAction(handler: @escaping (Self) -> Void) {
         let target = Self.targets[.init(self), default: ActionTarget<Self>()] as! ActionTarget<Self>
         target.actions.append(handler)
+        Self.targets[.init(self)] = target
         self.target = target
         self.action = #selector(target.handleEvent(_:))
     }
