@@ -17,6 +17,11 @@ final class UIPlusTests: XCTestCase {
         }
         
         let vc = UIViewController()
+        vc.alertPublisher(title: nil, message: nil, preferredStyle: .actionSheet) { alert, completion in
+            alert.addAction(.init(title: "adsf", style: .default, handler: { _ in
+                completion(.success(1))
+            }))
+        }
 //        vc.alertPublisher(title: "", message: "", preferredStyle: .actionSheet, textFieldHandlers: <#T##[(UITextField, UIAlertController) -> Void]#>, actions: <#T##[AlertAction<Output>]#>)
 //        vc.alertPublisher(
 //            title: "a", message: "m", preferredStyle: .alert,
