@@ -37,15 +37,20 @@ public extension EventHandling where Self: UIControl {
     }
     
     func addAction(for controlEvents: Event, handler: @escaping (Self) -> Void) {
-        let target = Self.targets[ObjectIdentifier(self), default: [:]][controlEvents, default: ActionTarget<Self>()] as! ActionTarget<Self>
+        var targets = Self.targets[ObjectIdentifier(self), default: [:]]
+        let target = targets[controlEvents, default: ActionTarget<Self>()] as! ActionTarget<Self>
+        defer {
+            targets[controlEvents] = target
+            Self.targets[ObjectIdentifier(self)] = targets
+        }
         addTarget(target, action: #selector(target.handleEvent(_:)), for: controlEvents)
         target.actions.append(handler)
     }
     
     func removeAction(for controlEvents: Event) {
-        let target = Self.targets[ObjectIdentifier(self), default: [:]][controlEvents, default: ActionTarget<Self>()] as! ActionTarget<Self>
+        let target = Self.targets[ObjectIdentifier(self)]?[controlEvents] as? ActionTarget<Self>
         removeTarget(target, action: #selector(ActionTarget<Self>.handleEvent(_:)), for: controlEvents)
-        Self.targets[ObjectIdentifier(self), default: [:]][controlEvents] = nil
+        Self.targets[ObjectIdentifier(self)]?[controlEvents] = nil
     }
 }
 
@@ -70,8 +75,10 @@ public extension EventHandling where Self: UIBarButtonItem {
     
     func addAction(handler: @escaping (Self) -> Void) {
         let target = Self.targets[.init(self), default: ActionTarget<Self>()] as! ActionTarget<Self>
+        defer {
+            Self.targets[.init(self)] = target
+        }
         target.actions.append(handler)
-        Self.targets[.init(self)] = target
         self.target = target
         self.action = #selector(target.handleEvent(_:))
     }
