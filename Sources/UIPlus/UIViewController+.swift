@@ -19,6 +19,7 @@ public extension UIViewController {
         title: String?,
         message: String?,
         preferredStyle: UIAlertController.Style,
+        textFieldHandlers: [(UITextField) -> Void],
         actions: [AlertAction<Output>]
     ) -> Future<Output, Error> {
     
@@ -32,12 +33,12 @@ public extension UIViewController {
                 message: message,
                 preferredStyle: preferredStyle
             )
-            
+            textFieldHandlers.forEach(alert.addTextField(configurationHandler:))
             actions.lazy
                 .map { builder in
-                    UIAlertAction(title: builder.title, style: builder.style) { _ in
+                    UIAlertAction(title: builder.title, style: builder.style) { action in
                         do {
-                            completion(.success(try builder.handler()))
+                            completion(.success(try builder.handler(alert.textFields ?? [])))
                         } catch {
                             completion(.failure(error))
                         }
@@ -53,7 +54,7 @@ public extension UIViewController {
 }
 
 public struct AlertAction<Output> {
-    public init(title: String?, style: UIAlertAction.Style, handler: @escaping () throws -> Output) {
+    public init(title: String?, style: UIAlertAction.Style, handler: @escaping ([UITextField]) throws -> Output) {
         self.title = title
         self.style = style
         self.handler = handler
@@ -62,7 +63,7 @@ public struct AlertAction<Output> {
 
     var title: String?
     var style: UIAlertAction.Style
-    var handler: () throws -> Output
+    var handler: ([UITextField]) throws -> Output
 }
 
 

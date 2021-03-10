@@ -16,7 +16,17 @@ final class UIPlusTests: XCTestCase {
             
         }
         
-        
+        let vc = UIViewController()
+        vc.alertPublisher(
+            title: "a", message: "m", preferredStyle: .alert,
+            textFieldHandlers: [
+                { $0.placeholder = "asdf" }
+            ],
+            actions: [
+                .init(title: "asdf", style: .default, handler: { alert in
+                    
+                })
+            ])
         //        button.addAction(for: .touchUpInside) { button in
         //            let a = button as! UIButton
 //            print(a)
