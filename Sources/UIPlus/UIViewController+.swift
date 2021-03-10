@@ -19,7 +19,7 @@ public extension UIViewController {
         title: String?,
         message: String?,
         preferredStyle: UIAlertController.Style,
-        textFieldHandlers: [(UITextField) -> Void],
+        textFieldHandlers: [(UITextField, UIAlertController) -> Void],
         actions: [AlertAction<Output>]
     ) -> Future<Output, Error> {
     
@@ -33,7 +33,11 @@ public extension UIViewController {
                 message: message,
                 preferredStyle: preferredStyle
             )
-            textFieldHandlers.forEach(alert.addTextField(configurationHandler:))
+            textFieldHandlers.forEach { handler in
+                alert.addTextField { textField in
+                    handler(textField, alert)
+                }
+            }
             actions.lazy
                 .map { builder in
                     UIAlertAction(title: builder.title, style: builder.style) { action in

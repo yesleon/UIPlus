@@ -17,10 +17,16 @@ final class UIPlusTests: XCTestCase {
         }
         
         let vc = UIViewController()
+        vc.alertPublisher(title: "", message: "", preferredStyle: .actionSheet, textFieldHandlers: <#T##[(UITextField, UIAlertController) -> Void]#>, actions: <#T##[AlertAction<Output>]#>)
         vc.alertPublisher(
             title: "a", message: "m", preferredStyle: .alert,
             textFieldHandlers: [
-                { $0.placeholder = "asdf" }
+                { textField, alert in
+                    textField.placeholder = "asdf"
+                    textField.addAction(for: .editingChanged) { textField in
+                        alert.actions[1].isEnabled = false
+                    }
+                }
             ],
             actions: [
                 .init(title: "asdf", style: .default, handler: { alert in
