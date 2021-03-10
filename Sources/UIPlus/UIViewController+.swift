@@ -53,6 +53,12 @@ public extension UIViewController {
 }
 
 public struct AlertAction<Output, Failure: Error> {
+    public init(title: String? = nil, style: UIAlertAction.Style, handler: @escaping () throws -> Output) {
+        self.title = title
+        self.style = style
+        self.handler = handler
+    }
+    
 
     var title: String?
     var style: UIAlertAction.Style
